@@ -3,12 +3,13 @@ use passing_arg_iter::*;
 
 #[derive(Clone)]
 pub struct Rope(ropey::Rope);
-impl<'l> Segments for &'l Rope {
+impl<'a> Segments for &'a Rope {
+    #[allow(clippy::type_complexity)]
     type Iter = std::iter::Map<
-        std::iter::Enumerate<ropey::iter::Lines<'l>>,
-        fn((usize, ropey::RopeSlice<'l>)) -> RopeSegment<'l>,
+        std::iter::Enumerate<ropey::iter::Lines<'a>>,
+        fn((usize, ropey::RopeSlice<'a>)) -> RopeSegment<'a>,
     >;
-    type Segment = RopeSegment<'l>;
+    type Segment = RopeSegment<'a>;
     fn segments(self) -> Self::Iter {
         self.0
             .lines()
@@ -28,13 +29,14 @@ pub struct RopeSlice<'a> {
 }
 
 impl<'a> Segments for &RopeSlice<'a> {
+    #[allow(clippy::type_complexity)]
     type Iter = std::iter::Map<
         PassingArgument<std::iter::Enumerate<ropey::iter::Lines<'a>>, usize>,
         fn((usize, (usize, ropey::RopeSlice<'a>))) -> RopeSegment<'a>,
     >;
     type Segment = RopeSegment<'a>;
     fn segments(self) -> Self::Iter {
-        fn rs<'l>(t: (usize, (usize, ropey::RopeSlice<'l>))) -> RopeSegment<'l> {
+        fn rs(t: (usize, (usize, ropey::RopeSlice<'_>))) -> RopeSegment<'_> {
             let (offset, (index, slice)) = t;
             RopeSegment {
                 slice,
