@@ -5,7 +5,12 @@ authors = ["Avi ד"]
 edition = "2018"
 
 [dependencies]
-lsp-types = "0.56.0"
-ropey = { git = "https://github.com/Avi-D-coder/ropey-iterator.git" }
+lsp-types = "0.57"
+smallvec = "0.6"
+ropey = { path = "../ropey-iterator" }
 passing-arg-iter = "0.1"
 hash-diff = { git = "https://github.com/Avi-D-coder/hash-diff.git" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0", features = ["raw_value"] }
+diffs = "0.3"
+lazy_static = "*"
