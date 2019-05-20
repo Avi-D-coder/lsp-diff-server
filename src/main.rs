@@ -5,8 +5,7 @@ use rope_diff::Full;
 
 use std::collections::HashMap;
 use std::env;
-use std::fs::File;
-use std::io::{stdin, BufRead, BufWriter, Read, Stdin, Write};
+use std::io::{stdin, BufRead, Read, Stdin, Write};
 use std::process::{ChildStdin, Command, Stdio};
 use std::str;
 use std::thread;
@@ -32,9 +31,6 @@ fn main() {
         .spawn()
         .unwrap_or_else(|_| panic!("Unable to start server with command: '{}'", server));
     let mut server_stdin = server.stdin.expect("server stdin failed");
-
-    let log = File::create("lsp-diff-log.json").expect("File creation failed");
-    let mut log = BufWriter::new(log);
 
     let mut url_text: HashMap<Url, Rope> = HashMap::with_capacity(20);
 
@@ -94,23 +90,23 @@ fn main() {
                         let end_offset = rope.line_to_char(range.end.line as usize)
                             + range.end.character as usize;
                         let ret = with(rope, range, change_text, start_offset, end_offset);
-                        // TODO Handel Unicode consistently.
-                        eprintln!("\n\n\nChange\n");
+                        // TODO Handle Unicode consistently.
+                        dbg!("\n\n\nChange\n");
                         if start_offset < end_offset {
-                            eprintln!("START_OFFSET < END_OFFSET");
+                            dbg!("START_OFFSET < END_OFFSET");
                             dbg!(&rope.line(dbg!(range.start.line) as usize));
                             rope.remove(start_offset..end_offset);
                             dbg!(&rope.line(range.start.line as usize));
                         }
                         if !change_text.is_empty() {
-                            eprintln!("CHANGE_TEXT NOT EMPTY");
+                            dbg!("CHANGE_TEXT NOT EMPTY");
                             dbg!(range.start.line);
                             dbg!(&rope.line(range.start.line as usize));
                             rope.insert(start_offset, change_text);
                             dbg!(&rope.line(range.start.line as usize));
                         };
 
-                        eprintln!("END\n");
+                        dbg!("END\n");
                         ret
                     }
 
@@ -155,9 +151,6 @@ fn main() {
                 }
             })
             .collect();
-
-        serde_json::to_writer_pretty(&mut log, &content_changes).unwrap();
-        log.flush().unwrap();
 
         let did_change = serde_json::to_string(&NotiS::new(Change(DidChangeTextDocumentParams {
             text_document,

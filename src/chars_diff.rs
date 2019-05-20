@@ -58,7 +58,7 @@ impl<'l> Index<usize> for Str<'l> {
 impl<'o, 'n> Diff for Incremental<'o, 'n> {
     type Error = ();
     fn delete(&mut self, old: usize, len: usize) -> Result<(), Self::Error> {
-        eprintln!("\n\n DELETE");
+        dbg!("\n\n DELETE");
         dbg!(old);
         dbg!(len);
         dbg!(self.char_offset);
@@ -71,8 +71,7 @@ impl<'o, 'n> Diff for Incremental<'o, 'n> {
         };
 
         debug_assert_eq!(self.old.slice.byte_to_line(old), start.line);
-        eprintln!(
-            "{:?}",
+        dbg!(
             String::from(self.old.slice.line(self.old.slice.byte_to_line(old)))
                 .split_at(start.character as usize)
         );
@@ -86,8 +85,7 @@ impl<'o, 'n> Diff for Incremental<'o, 'n> {
 
         debug_assert_eq!(self.old.slice.byte_to_line(old + len), end.line);
 
-        eprintln!(
-            "{:?}",
+        dbg!(
             String::from(self.old.slice.line(self.old.slice.byte_to_line(old + len)))
                 .split_at(end.character as usize)
         );
@@ -125,7 +123,7 @@ impl<'o, 'n> Diff for Incremental<'o, 'n> {
     }
 
     fn insert(&mut self, old: usize, new: usize, new_len: usize) -> Result<(), Self::Error> {
-        eprintln!("\n\n INSERT");
+        dbg!("\n\n INSERT");
         dbg!(old);
         dbg!(new);
         dbg!(new_len);
@@ -139,8 +137,7 @@ impl<'o, 'n> Diff for Incremental<'o, 'n> {
         };
 
         debug_assert_eq!(self.old.slice.byte_to_line(old), start.line);
-        eprintln!(
-            "{:?}",
+        dbg!(
             String::from(self.old.slice.line(self.old.slice.byte_to_line(old)))
                 .split_at(start.character as usize)
         );
@@ -208,7 +205,7 @@ impl<'o, 'n> Diff for Incremental<'o, 'n> {
         new: usize,
         new_len: usize,
     ) -> Result<(), Self::Error> {
-        eprintln!("REPLACE");
+        dbg!("REPLACE");
         dbg!(old);
         dbg!(old_len);
         dbg!(new);
@@ -223,8 +220,7 @@ impl<'o, 'n> Diff for Incremental<'o, 'n> {
             self.char_offset = 0;
         };
 
-        eprintln!(
-            "{:?}",
+        dbg!(
             String::from(self.old.slice.line(self.old.slice.byte_to_line(old)))
                 .split_at(start.character as usize)
         );
@@ -235,15 +231,12 @@ impl<'o, 'n> Diff for Incremental<'o, 'n> {
         );
         let end = self.old.slice.byte_to_position(old + old_len);
 
-        eprintln!(
-            "{:?}",
-            String::from(
-                self.old
-                    .slice
-                    .line(self.old.slice.byte_to_line(old + old_len))
-            )
-            .split_at(end.character as usize)
-        );
+        dbg!(String::from(
+            self.old
+                .slice
+                .line(self.old.slice.byte_to_line(old + old_len))
+        )
+        .split_at(end.character as usize));
 
         let end = Position::new(
             dbg!(self.line_offset + end.line as isize) as u64,
