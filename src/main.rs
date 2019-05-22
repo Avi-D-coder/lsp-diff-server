@@ -79,55 +79,6 @@ fn main() {
                     ch
                 }
                 Some(range) => {
-                    fn with_change<R: std::fmt::Debug>(
-                        change_text: &str,
-                        range: Range,
-                        rope: &mut Rope,
-                        with: fn(&mut Rope, Range, &str, usize, usize) -> R,
-                    ) -> R {
-                        let start_offset = rope.line_to_char(range.start.line as usize)
-                            + range.start.character as usize;
-                        let end_offset = rope.line_to_char(range.end.line as usize)
-                            + range.end.character as usize;
-                        let ret = with(rope, range, change_text, start_offset, end_offset);
-                        // TODO Handle Unicode consistently.
-                        dbg!("\n\n\nChange\n");
-                        if start_offset < end_offset {
-                            dbg!("START_OFFSET < END_OFFSET");
-                            dbg!(&rope.line(dbg!(range.start.line) as usize));
-                            rope.remove(start_offset..end_offset);
-                            dbg!(&rope.line(range.start.line as usize));
-                        }
-                        if !change_text.is_empty() {
-                            dbg!("CHANGE_TEXT NOT EMPTY");
-                            dbg!(range.start.line);
-                            dbg!(&rope.line(range.start.line as usize));
-                            rope.insert(start_offset, change_text);
-                            dbg!(&rope.line(range.start.line as usize));
-                        };
-
-                        dbg!("END\n");
-                        ret
-                    }
-
-                    fn char_diff(
-                        rope: &mut Rope,
-                        range: Range,
-                        change_text: &str,
-                        start_offset: usize,
-                        end_offset: usize,
-                    ) -> Changes {
-                        let old_slice = RopeSlice {
-                            slice: rope.slice(start_offset..end_offset),
-                            absolute_pos: ropey::Position {
-                                line: rope.char_to_line(start_offset),
-                                character: dbg!(range.start.character) as usize,
-                            },
-                        };
-
-                        Incremental::diff(old_slice, change_text)
-                    };
-
                     if cfg!(debug_assertions) {
                         let mut rope = rope.clone();
                         let mut rope2 = rope.clone();
@@ -144,7 +95,7 @@ fn main() {
                             );
                         }
 
-                        // debug_assert_eq!(String::from(rope), String::from(rope2));
+                        debug_assert_eq!(String::from(rope), String::from(rope2));
                     };
 
                     with_change(change.text.as_str(), range, rope, char_diff)
@@ -239,6 +190,54 @@ fn handle_rpc_msgs(
             }
         };
     }
+}
+
+fn with_change<R: std::fmt::Debug>(
+    change_text: &str,
+    range: Range,
+    rope: &mut Rope,
+    with: fn(&mut Rope, Range, &str, usize, usize) -> R,
+) -> R {
+    let start_offset =
+        rope.line_to_char(range.start.line as usize) + range.start.character as usize;
+    let end_offset = rope.line_to_char(range.end.line as usize) + range.end.character as usize;
+    let ret = with(rope, range, change_text, start_offset, end_offset);
+    // TODO Handle Unicode consistently.
+    dbg!("\n\n\nChange\n");
+    if start_offset < end_offset {
+        dbg!("START_OFFSET < END_OFFSET");
+        dbg!(&rope.line(dbg!(range.start.line) as usize));
+        rope.remove(start_offset..end_offset);
+        dbg!(&rope.line(range.start.line as usize));
+    }
+    if !change_text.is_empty() {
+        dbg!("CHANGE_TEXT NOT EMPTY");
+        dbg!(range.start.line);
+        dbg!(&rope.line(range.start.line as usize));
+        rope.insert(start_offset, change_text);
+        dbg!(&rope.line(range.start.line as usize));
+    };
+
+    dbg!("END\n");
+    ret
+}
+
+fn char_diff(
+    rope: &mut Rope,
+    range: Range,
+    change_text: &str,
+    start_offset: usize,
+    end_offset: usize,
+) -> Changes {
+    let old_slice = RopeSlice {
+        slice: rope.slice(start_offset..end_offset),
+        absolute_pos: ropey::Position {
+            line: rope.char_to_line(start_offset),
+            character: dbg!(range.start.character) as usize,
+        },
+    };
+
+    Incremental::diff(old_slice, change_text)
 }
 
 #[derive(Deserialize, Serialize, Debug)]
