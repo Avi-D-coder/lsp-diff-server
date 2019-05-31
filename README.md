@@ -3,8 +3,8 @@
 
 ### Features
 - Incremental sync changes => finer grained changes.
+- Monitor and Restart server if it exceeds memory limit. *We should swallow `InitializeResult` and handle `InitializeError`.
 
 #### TODO
 - Full sync => Incremental sync. Untested likely generates incorrect edit script.
-- Monitor and Restart server if it exceeds memory limit.
 - Unicode support. Non ASCII text currently breaks the sync implementation.
