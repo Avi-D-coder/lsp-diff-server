@@ -89,6 +89,12 @@ impl<'o, 'n> Diff for Incremental<'o, 'n> {
             String::from(self.old.slice.line(self.old.slice.byte_to_line(old + len)))
                 .split_at(end.character as usize)
         );
+
+        if end.line != self.on_line {
+            self.on_line = end.line;
+            self.char_offset = 0;
+        };
+
         let end = Position::new(
             dbg!(self.line_offset + end.line as isize) as u64,
             dbg!(self.char_offset + end.character as isize) as u64,
@@ -237,6 +243,11 @@ impl<'o, 'n> Diff for Incremental<'o, 'n> {
                 .line(self.old.slice.byte_to_line(old + old_len))
         )
         .split_at(end.character as usize));
+
+        if end.line != self.on_line {
+            self.on_line = end.line;
+            self.char_offset = 0;
+        };
 
         let end = Position::new(
             dbg!(self.line_offset + end.line as isize) as u64,
