@@ -15,6 +15,7 @@ use locked_resource::*;
 use lsp_types::*;
 use ropey::Rope;
 use serde::{de::IgnoredAny, Deserialize, Serialize};
+use smallvec::smallvec;
 
 fn main() {
     let server = env::args()
@@ -94,7 +95,15 @@ fn main() {
                         debug_assert_eq!(String::from(rope), String::from(rope2));
                     };
 
-                    with_change(change.text.as_str(), range, rope, char_diff)
+                    if range.start.line == range.end.line
+                        && range.end.character - range.start.character < 3
+                    {
+                        with_change(change.text.as_str(), range, rope, |_, _, _, _, _| {
+                            smallvec![change.clone()]
+                        })
+                    } else {
+                        with_change(change.text.as_str(), range, rope, char_diff)
+                    }
                 }
             })
             .collect();
@@ -271,7 +280,7 @@ fn with_change<R: std::fmt::Debug>(
     change_text: &str,
     range: Range,
     rope: &mut Rope,
-    with: fn(&mut Rope, Range, &str, usize, usize) -> R,
+    with: impl Fn(&mut Rope, Range, &str, usize, usize) -> R,
 ) -> R {
     let start_offset =
         rope.line_to_char(range.start.line as usize) + range.start.character as usize;
