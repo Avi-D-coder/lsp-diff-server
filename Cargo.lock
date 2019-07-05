@@ -111,7 +111,7 @@ dependencies = [
  "hash-diff 0.1.0 (git+https://github.com/Avi-D-coder/hash-diff.git)",
  "lazy_static 1.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "locked-resource 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "lsp-types 0.57.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "lsp-types 0.58.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "passing-arg-iter 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "ropey 1.0.0 (git+https://github.com/Avi-D-coder/ropey-iterator.git)",
  "serde 1.0.92 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -122,7 +122,7 @@ dependencies = [
 
 [[package]]
 name = "lsp-types"
-version = "0.57.2"
+version = "0.58.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "bitflags 1.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -384,7 +384,7 @@ dependencies = [
 "checksum lazy_static 1.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "bc5729f27f159ddd61f4df6228e827e86643d4d3e7c32183cb30a1c08f604a14"
 "checksum libc 0.2.56 (registry+https://github.com/rust-lang/crates.io-index)" = "113dacd5d2dd5dcf7800449b3c3115957db1b6452a4c5bb3447e81087f23e53f"
 "checksum locked-resource 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "dd61ff0c4df48b32f6dd688e21158009e238e3946c25f0bc4541ea4d648f8627"
-"checksum lsp-types 0.57.2 (registry+https://github.com/rust-lang/crates.io-index)" = "b62b77309737b1e262b3bbf37ff8faa740562c633b14702afe9be85dbcb6f88a"
+"checksum lsp-types 0.58.1 (registry+https://github.com/rust-lang/crates.io-index)" = "42c7edac51b6739544453fd33c7ae5e910d1ec4f2d9904cf1990f8f6581e26f5"
 "checksum matches 0.1.8 (registry+https://github.com/rust-lang/crates.io-index)" = "7ffc5c5338469d4d3ea17d269fa8ea3512ad247247c30bd2df69e68309ed0a08"
 "checksum nohash-hasher 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "0d138afcce92d219ccb6eb53d9b1e8a96ac0d633cfd3c53cd9856d96d1741bb8"
 "checksum num-derive 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)" = "eafd0b45c5537c3ba526f79d3e75120036502bebacbb3f3220914067ce39dbf2"
